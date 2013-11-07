@@ -6,6 +6,7 @@
   <artifactId>books</artifactId>
   <packaging>pom</packaging>
   <name>Personal Catalogue</name>
+  <description>Social site for people to maintain their personal catalogue information</description>
   <modules>
     <module>webapp</module>
   </modules>
@@ -23,6 +24,14 @@
       <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
     </license>
   </licenses>
+  <issueManagement>
+    <system>Github</system>
+    <url>https://github.com/sazzer/catalogue/issues</url>
+  </issueManagement>
+  <scm>
+    <connection>scm:git:https://github.com/sazzer/catalogue.git</connection>
+    <url>https://github.com/sazzer/catalogue</url>
+  </scm>
   <properties>
     <aspectj-version>1.7.4</aspectj-version>
     <cobertura-version>2.6</cobertura-version>

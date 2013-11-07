@@ -12,6 +12,7 @@
   <artifactId>webapp</artifactId>
   <packaging>war</packaging>
   <name>Webapp</name>
+  <description>The main web application</description>
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
