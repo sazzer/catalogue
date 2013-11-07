@@ -32,6 +32,19 @@
     <connection>scm:git:https://github.com/sazzer/catalogue.git</connection>
     <url>https://github.com/sazzer/catalogue</url>
   </scm>
+  <ciManagement>
+    <system>travis-ci</system>
+    <url>https://travis-ci.org/sazzer/catalogue</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+      </notifier>
+    </notifiers>
+  </ciManagement>
   <properties>
     <aspectj-version>1.7.4</aspectj-version>
     <cobertura-version>2.6</cobertura-version>
