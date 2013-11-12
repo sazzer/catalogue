@@ -49,6 +49,7 @@
     <aspectj-version>1.7.4</aspectj-version>
     <cobertura-version>2.6</cobertura-version>
     <findbugs-version>2.5.2</findbugs-version>
+    <jackson-version>2.2.3</jackson-version>
     <javadoc-version>2.9.1</javadoc-version>
     <slf4j-version>1.7.5</slf4j-version>
     <spring-version>3.2.5.RELEASE</spring-version>
@@ -98,7 +99,7 @@
       <dependency>
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
-        <version>1.0.0.GA</version>
+        <version>1.1.0.Final</version>
         <scope>compile</scope>
       </dependency>
       <dependency>
@@ -158,6 +159,17 @@
         <artifactId>joda-time</artifactId>
         <version>2.3</version>
         <scope>compile</scope>
+      </dependency>
+      <!-- Jackson -->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>${jackson-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+          <version>${jackson-version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
