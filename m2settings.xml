@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <servers>
+        <server>
+          <id>grahamcox.co.uk</id>
+          <username>maven</username>
+          <privateKey>${user.home}/.ssh/travis_rsa</privateKey>
+          <passphrase>${sshpassphrase}</passphrase>
+        </server>
+    </servers>
+</settings>
+

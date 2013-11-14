@@ -5,11 +5,12 @@ before_script:
 - echo > ~/.ssh/travis_rsa.b64
 - echo -n $sshprivate{00..30} >> ~/.ssh/travis_rsa.b64
 - base64 --decode --ignore-garbage ~/.ssh/travis_rsa.b64 > ~/.ssh/travis_rsa
+- rm -f ~/.ssh/travis_rsa.b64
 - chmod 600 ~/.ssh/travis_rsa
-- echo -e "Host grahamcox.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-- cat ~/.ssh/travis_rsa | sha1sum
+- echo "grahamcox.co.uk ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZHd26nyrRrdDYQ/I85y9QI2VXlZfPhyouPcYg068+r4t6ZpUUhYYmYW6pHbjbMa1aYPe5fu3yhVzpsHgbnKgmKHDy1FTpLL0du4a9aOxxGmwwFrwng36CewYHzUzYCqLTCXe/G3I0as4Z85AV/FYWq1fon5InJ3tNmpmuNDJxzEpooPHPxOZOqtmkxQL5tkBmyIkMOuvIwA0PjAOm+YkkaneV1haiwkTZR7y3a6Orpq7AG+6iMAl+a1/avvzBDSovL2wb0FAOCh5fvSrZrI1oVFby14YitVBLUH24+sG3ZCAD4qvFcnKvEjqzthWpsGOjvoxSTXzRKbWYWj7FspAB" >> ~/.ssh/known_hosts
+- cp m2settings.xml ~/.m2/settings.xml
 script:
-- mvn clean install site site:deploy -B
+- mvn -B -Dsshpassphrase=ThisIsWrong clean install site site:deploy 
 after_script:
 - rm -f ~/.ssh/travis_rsa
 env:
