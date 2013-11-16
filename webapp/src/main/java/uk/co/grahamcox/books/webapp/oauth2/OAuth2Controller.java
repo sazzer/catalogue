@@ -119,28 +119,7 @@ public class OAuth2Controller {
   public ErrorResponse handleOAuthException(OAuthException e,
     HttpServletRequest request) {
     ErrorResponse response = new ErrorResponse();
-    switch (e.getErrorCode()) {
-      case InvalidClient:
-        response.setError("invalid_client");
-        break;
-      case InvalidGrant:
-        response.setError("invalid_grant");
-        break;
-      case InvalidRequest:
-        response.setError("invalid_request");
-        break;
-      case InvalidScope:
-        response.setError("invalid_scope");
-        break;
-      case UnauthorizedClient:
-        response.setError("unauthorized_client");
-        break;
-      case UnsupportedGrantType:
-        response.setError("unsupported_grant_type");
-        break;
-      default:
-        assert(false);
-    }
+    response.setErrorCode(e.getErrorCode());
     response.setErrorDescription(e.getMessage());
     response.setState(request.getParameter("state"));
     return response;
