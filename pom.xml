@@ -178,6 +178,12 @@
           <artifactId>jackson-core</artifactId>
           <version>${jackson-version}</version>
       </dependency>
+      <!-- Commons -->
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+          <version>3.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -215,6 +221,11 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
+    </dependency>
+    <!-- Commons -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
   </dependencies>
   <build>
