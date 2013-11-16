@@ -110,12 +110,14 @@ public class OAuth2Controller {
   /**
    * Handler for an OAuth exception to return the correct error response
    * @param e the exception
+   * @param request the incoming request
    * @return the error response
    */
   @ExceptionHandler(OAuthException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  public ErrorResponse handleOAuthException(OAuthException e) {
+  public ErrorResponse handleOAuthException(OAuthException e,
+    HttpServletRequest request) {
     ErrorResponse response = new ErrorResponse();
     switch (e.getErrorCode()) {
       case InvalidClient:
@@ -140,6 +142,7 @@ public class OAuth2Controller {
         assert(false);
     }
     response.setErrorDescription(e.getMessage());
+    response.setState(request.getParameter("state"));
     return response;
   }
   /**

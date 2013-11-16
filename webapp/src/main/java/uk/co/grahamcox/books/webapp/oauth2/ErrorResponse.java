@@ -38,6 +38,9 @@ public class ErrorResponse {
   /** A URI to help about the error */
   @JsonProperty("error_uri")
   private URI errorUri;
+  /** The state parameter from the request, if present */
+  @JsonProperty("state")
+  private String state;
 
   /**
    * Get the error code
@@ -85,5 +88,21 @@ public class ErrorResponse {
    */
   public void setErrorUri(URI errorUri) {
     this.errorUri = errorUri;
+  }
+
+  /**
+   * Get the state parameter
+   * @return the state parameter
+   */
+  public String getState() {
+    return state;
+  }
+
+  /**
+   * Set the state parameter
+   * @param state the state parameter
+   */
+  public void setState(String state) {
+    this.state = state;
   }
 }
