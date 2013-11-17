@@ -18,8 +18,10 @@ package uk.co.grahamcox.books.webapp.oauth2;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.UUID;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
@@ -28,13 +30,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.co.grahamcox.books.oauth2.AccessToken;
-import uk.co.grahamcox.books.oauth2.AccessTokenId;
+import uk.co.grahamcox.books.oauth2.Authenticator;
 import uk.co.grahamcox.books.oauth2.OAuthException;
-import uk.co.grahamcox.books.oauth2.RefreshTokenId;
 
 /**
  * Controller responsible for handling the OAuth 2.0 requests as defined in RFC-6749.
@@ -42,6 +43,19 @@ import uk.co.grahamcox.books.oauth2.RefreshTokenId;
 @Controller
 @RequestMapping("/oauth/2")
 public class OAuth2Controller {
+  /** The authenticator to use */
+  @NotNull
+  @Valid
+  private Authenticator authenticator = null;
+
+  /**
+   * Inject the authenticator to use
+   * @param authenticator the authenticator to use
+   */
+  public void setAuthenticator(Authenticator authenticator) {
+    this.authenticator = authenticator;
+  }
+
   /**
    * Handle all of the requests that come in on GET /authorize
    * @param responseType The response type expected
@@ -78,7 +92,8 @@ public class OAuth2Controller {
    */
   @RequestMapping(value = "/token", method = RequestMethod.POST)
   @ResponseBody
-  public AccessTokenResponse token(@RequestParam("grant_type") String grantType, HttpServletRequest req)
+  public AccessTokenResponse token(@RequestParam(value = "grant_type", required = false) String grantType,
+    HttpServletRequest req)
     throws OAuthException {
     AccessToken accessToken;
 
@@ -182,16 +197,9 @@ public class OAuth2Controller {
    * @param password The password
    * @param scope The scopes
    */
-  private AccessToken resourceOwnerPasswordCredentialsGrant(String username, String password, String scope) {
-    AccessToken accessToken = new AccessToken();
-    accessToken.setAccessToken(new AccessTokenId(UUID.randomUUID().toString()));
-    accessToken.setRefreshToken(new RefreshTokenId(UUID.randomUUID().toString()));
-    accessToken.setExpiry(new DateTime().plusHours(1));
-    accessToken.setTokenType("bearer");
-    if (scope != null && !scope.isEmpty()) {
-      accessToken.setScopes(new HashSet<String>(Arrays.asList(scope.split(" "))));
-    }
-    return accessToken;
+  private AccessToken resourceOwnerPasswordCredentialsGrant(String username, String password, String scope) throws OAuthException {
+    Set<String> scopes = new HashSet<String>(Arrays.asList(scope.split(" ")));
+    return authenticator.authenticate(username, password, scopes);
   }
 
   /**
