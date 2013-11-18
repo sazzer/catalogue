@@ -61,6 +61,20 @@ public class OAuth2ControllerIntegrationTest {
   public void testTokenNoGrantType() throws Exception {
     mockMvc.perform(post("/oauth/2/token")
       .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().isBadRequest());
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.error").exists())
+      .andExpect(jsonPath("$.error").value("unsupported_grant_type"));
+  }
+  /**
+   * Test when we call the POST /token endpoint with a grant type that isn't valid
+   */
+  @Test
+  public void testTokenBadGrantType() throws Exception {
+    mockMvc.perform(post("/oauth/2/token")
+      .param("grant_type", "bad")
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.error").exists())
+      .andExpect(jsonPath("$.error").value("unsupported_grant_type"));
   }
 }
