@@ -16,6 +16,7 @@
  */
 package uk.co.grahamcox.books.user;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Hex;
@@ -36,10 +37,12 @@ public class PasswordHasher {
 
     try {
       MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-       digest = messageDigest.digest(password.getBytes());
+       digest = messageDigest.digest(password.getBytes("UTF-8"));
     }
     catch (NoSuchAlgorithmException e) {
       throw new UnsupportedOperationException("The message digest SHA-1 is not supported", e);
+    } catch (UnsupportedEncodingException e) {
+      throw new UnsupportedOperationException("The character encoding UTF-8 is not supported", e);
     }
     String hashed = Hex.encodeHexString(digest);
     return new Password(hashed);

@@ -26,6 +26,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Representation of a password
  */
 public class Password implements Serializable {
+  /** Serial UID */
+  private static final long serialVersionUID = -8830030962525726515L;
   /** The hashed password */
   @NotNull
   @Size(min = 1)
