@@ -17,6 +17,7 @@
 package uk.co.grahamcox.books.user;
 
 import java.io.Serializable;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,10 +32,15 @@ public class User implements Serializable {
   /** The Serial UID */
   private static final long serialVersionUID = -1593974527331984301L;
   /** The User ID of the user */
+  @Valid
   private UserId userId;
   /** The password of the user */
+  @NotNull
+  @Valid
   private Password password;
   /** The email address of the user */
+  @NotNull
+  @Size(min = 1)
   private String email;
   /** Whether the user is active */
   private boolean active;
