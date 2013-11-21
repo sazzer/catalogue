@@ -1,1 +1,26 @@
-Start here
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Personal Catalogue</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      dojoConfig = {
+        has: {
+        },
+        async: true,
+        packages: [
+          {
+            name: "books",
+            location: location.pathname.replace(/\/[^/]+$/, '') + "/js/modules"
+          }
+        ],
+        deps: [
+          "books/application"
+        ]
+      };
+    </script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/dojo/1.9.1/dojo/dojo.js" data-dojo-config="async: true"></script>
+  </body>
+</html>
