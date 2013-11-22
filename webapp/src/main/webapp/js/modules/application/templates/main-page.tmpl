@@ -1,4 +1,15 @@
 <div>
-  This is my main page!
-  <span data-dojo-attach-event="onclick:_onClick">Click here</span>
+  <div id="mainPage">
+    <div id="header">
+      <h1 id="title" data-dojo-attach-point="titleNode">${messages.title}</h1>
+      <div id="userArea" class="loggedOut">
+        <div id="loggedIn">Logged In</div>
+        <div id="loggedOut">Logged Out</div>
+      </div>
+    </div>
+    <div id="body">
+    </div>
+    <div id="footer">
+    </div>
+  </div>
 </div>

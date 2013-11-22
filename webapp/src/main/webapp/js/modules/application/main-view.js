@@ -3,21 +3,16 @@
  */
 define([
   "dojo/_base/declare",
-  "dijit/Dialog",
+  "dojo/i18n",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
-  "dojo/text!./templates/main-page.tmpl"], function(declare, Dialog, _WidgetBase, _TemplatedMixin, template) {
+  "dojo/text!./templates/main-page.tmpl",
+  "dojo/i18n!./nls/main-view"], function(declare, i18n, _WidgetBase, _TemplatedMixin, template) {
   return declare([_WidgetBase, _TemplatedMixin], {
     templateString: template,
-    _onClick: function() {
-      var dialog = new Dialog({
-        title: "My Dialog",
-        content: "My Content",
-        style: {
-          width: "300px"
-        }
-      });
-      dialog.show();
+    postMixInProperties: function() {
+      this.inherited(arguments);
+      this.messages = i18n.getLocalization("books.application", "main-view", this.lang);
     }
   });
 });

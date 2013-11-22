@@ -61,6 +61,22 @@
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.lesscss</groupId>
+        <artifactId>lesscss-maven-plugin</artifactId>
+        <configuration>
+          <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+          <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+          <compress>true</compress>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

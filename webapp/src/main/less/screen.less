@@ -1,0 +1,60 @@
+@headerHeight: 5em;
+@footerHeight: 4em;
+
+#mainPage{
+  #header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @headerHeight;
+
+    #title {
+      position: absolute;
+      top: 0.5em;
+      left: 1em;
+      margin-top: 0;
+    }
+
+    #userArea {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+
+      &.loggedOut {
+        #loggedOut {
+          display: block;
+        }
+        #loggedIn {
+          display: none;
+        }
+      }
+      &.loggedIn {
+        #loggedOut {
+          display: none;
+        }
+        #loggedIn {
+          display: block;
+        }
+      }
+    }
+  }
+  #body {
+    position: absolute;
+    top: @headerHeight;
+    bottom: @footerHeight;
+    left: 0;
+    right: 0;
+    overflow: auto;
+  }
+  #footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: @footerHeight;
+
+    background-color: black;
+    color: white;
+  }
+}
