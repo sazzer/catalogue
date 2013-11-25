@@ -1,16 +1,15 @@
 /**
- * The main view of the whole application
+ * The User Area in the header of the whole application
  */
 define([
   "dojo/_base/declare",
   "dojo/i18n",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
-  "dijit/_WidgetsInTemplateMixin",
-  "dojo/text!./templates/main-page.tmpl",
-  "dojo/i18n!./nls/main-view",
-  "books/application/user-area/user-area"], function(declare, i18n, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template) {
-  return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+  "dojo/text!./templates/user-area.tmpl",
+  "dojo/i18n!./nls/user-area"
+  ], function(declare, i18n, _WidgetBase, _TemplatedMixin, template) {
+  return declare([_WidgetBase, _TemplatedMixin], {
     /** The template string to render */
     templateString: template,
     /**
@@ -21,7 +20,8 @@ define([
      */
     postMixInProperties: function() {
       this.inherited(arguments);
-      this.messages = i18n.getLocalization("books.application", "main-view", this.lang);
+      this.messages = i18n.getLocalization("books.application.user-area", "user-area", this.lang);
     }
   });
 });
+
