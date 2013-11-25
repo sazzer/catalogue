@@ -21,6 +21,10 @@
       top: 1em;
       right: 1em;
 
+      #loggedOut, #loggedIn {
+        cursor: pointer;
+      }
+
       &.loggedOut {
         #loggedOut {
           display: block;
@@ -56,5 +60,35 @@
 
     background-color: black;
     color: white;
+  }
+}
+#loginDialog {
+  ul.socialButtons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      width: 300px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid black;
+      background-image: linear-gradient(rgba(255,255,255,.15) 49%, rgba(0,0,0,.1) 51%, rgba(0,0,0,.15));
+      color: white;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+      border-radius: 0.3em;
+      margin: 0.5em;
+      padding: 0.5em;
+
+      &.google {
+        background-color: #4e6cf7;
+      }
+      &.facebook {
+        background-color: #4863AF;
+      }
+      &.twitter {
+        background-color: #46c0fb;
+      }
+
+    }
   }
 }
