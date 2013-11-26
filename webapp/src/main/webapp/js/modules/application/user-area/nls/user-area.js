@@ -1,6 +1,6 @@
 define({
   root: {
-    login: "Log In",
+    login: "Login/Register",
     account: "Account"
   }
 });
