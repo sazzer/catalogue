@@ -10,7 +10,7 @@ before_script:
 - echo "grahamcox.co.uk ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZHd26nyrRrdDYQ/I85y9QI2VXlZfPhyouPcYg068+r4t6ZpUUhYYmYW6pHbjbMa1aYPe5fu3yhVzpsHgbnKgmKHDy1FTpLL0du4a9aOxxGmwwFrwng36CewYHzUzYCqLTCXe/G3I0as4Z85AV/FYWq1fon5InJ3tNmpmuNDJxzEpooPHPxOZOqtmkxQL5tkBmyIkMOuvIwA0PjAOm+YkkaneV1haiwkTZR7y3a6Orpq7AG+6iMAl+a1/avvzBDSovL2wb0FAOCh5fvSrZrI1oVFby14YitVBLUH24+sG3ZCAD4qvFcnKvEjqzthWpsGOjvoxSTXzRKbWYWj7FspAB" >> ~/.ssh/known_hosts
 - cp m2settings.xml ~/.m2/settings.xml
 script:
-- mvn -B -Dsshpassphrase="$sshpassphrase" clean install site site:deploy
+- mvn -B -Dsshpassphrase="$sshpassphrase" clean install site site:deploy -Pintegration-test
 after_script:
 - rm -f ~/.ssh/travis_rsa
 env:
