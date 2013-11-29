@@ -5,5 +5,24 @@
   <bean class="uk.co.grahamcox.books.webapp.oauth2.OAuth2Controller">
       <property name="authenticator" ref="authenticator" />
   </bean>
+
+    <bean class="uk.co.grahamcox.books.webapp.authentication.AuthenticationController">
+        <property name="remoteAuthenticationProviders">
+            <map>
+                <entry key="google">
+                    <bean class="uk.co.grahamcox.books.webapp.authentication.OAuth2Authentication">
+                        <property name="authUri" value="http://www.google.com" />
+                        <property name="clientId" value="clientId" />
+                        <property name="scopes">
+                            <set>
+                                <value>openid</value>
+                                <value>email</value>
+                            </set>
+                        </property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
 </beans>
 
