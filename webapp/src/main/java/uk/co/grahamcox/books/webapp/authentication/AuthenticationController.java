@@ -12,8 +12,11 @@ package uk.co.grahamcox.books.webapp.authentication;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
@@ -55,6 +58,22 @@ public class AuthenticationController {
         UnknownProviderResponse response = new UnknownProviderResponse();
         response.setProvider(e.getProvider());
         return response;
+    }
+
+    /**
+     * Get the list of providers that are configured
+     * @return the list of providers
+     */
+    @RequestMapping("/remote/providers")
+    @ResponseBody
+    public Collection<String> listProviders() {
+        Set<String> providers = new HashSet<>();
+        for (Map.Entry<String, RemoteAuthentication> provider : remoteAuthenticationProviders.entrySet()) {
+            if (provider.getValue() != null) {
+                providers.add(provider.getKey());
+            }
+        }
+        return providers;
     }
 
     /**
