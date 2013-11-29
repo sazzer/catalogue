@@ -48,6 +48,10 @@ public class OAuth2Authentication implements RemoteAuthentication {
   @NotNull
   @Valid
   private Set<String> scopes = new HashSet<>();
+  /** The URI to request the user is redirected to on success */
+  @Valid
+  @Size(min = 1)
+  private URI redirectUri;
   /**
    * Set the authentication URI to use
    * @param authUri the authentication URI
@@ -73,6 +77,14 @@ public class OAuth2Authentication implements RemoteAuthentication {
   }
 
   /**
+   * Set the URI to redirect the user to on login
+   * @param redirectUri the URI to redirect the user to
+   */
+  public void setRedirectUri(URI redirectUri) {
+    this.redirectUri = redirectUri;
+  }
+
+    /**
    * Generate a URI to redirect the user to for authentication purposes
    *
    * @return the URI to redirect to
@@ -84,6 +96,9 @@ public class OAuth2Authentication implements RemoteAuthentication {
     params.put("client_id", clientId);
     params.put("response_type", "code");
     params.put("state", UUID.randomUUID().toString());
+    if (redirectUri != null) {
+      params.put("redirect_uri", redirectUri.toString());
+    }
     if (!scopes.isEmpty()) {
       String scope = StringUtils.join(scopes, " ");
       params.put("scope", scope);

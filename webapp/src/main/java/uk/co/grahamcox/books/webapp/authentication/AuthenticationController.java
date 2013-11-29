@@ -10,6 +10,8 @@
  ******************************************************************************************************************/
 package uk.co.grahamcox.books.webapp.authentication;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
@@ -59,14 +61,44 @@ public class AuthenticationController {
      * Handle the request to redirect the user to the authentication provider
      * @param provider the provider of interest
      * @throws UnknownProviderException if the provider is unknown
+     * @throws URISyntaxException if the URI to redirect to is invalid
      */
     @RequestMapping("/remote/{provider}")
     @ResponseBody
-    public void redirectToRemote(@PathVariable String provider) throws UnknownProviderException {
-        if (remoteAuthenticationProviders.containsKey(provider)) {
-
+    public RedirectResponse redirectToRemote(@PathVariable String provider)
+        throws UnknownProviderException, URISyntaxException {
+        RemoteAuthentication remoteAuthentication = remoteAuthenticationProviders.get(provider);
+        if (remoteAuthentication != null) {
+            URI uri = remoteAuthentication.redirect();
+            RedirectResponse response = new RedirectResponse();
+            response.setUri(uri);
+            return response;
         } else {
             throw new UnknownProviderException(provider);
+        }
+    }
+
+    /**
+     * Response to indicate the client needs to redirect the user
+     */
+    public static class RedirectResponse {
+        /** The URI to redirect to */
+        private URI uri;
+
+        /**
+         * Get the URI to redirect to
+         * @return the URI to redirect to
+         */
+        public URI getUri() {
+            return uri;
+        }
+
+        /**
+         * Set the URI to redirect to
+         * @param uri the URI to redirect to
+         */
+        public void setUri(URI uri) {
+            this.uri = uri;
         }
     }
 
