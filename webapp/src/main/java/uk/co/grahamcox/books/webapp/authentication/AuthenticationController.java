@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,11 +68,15 @@ public class AuthenticationController {
      */
     @RequestMapping("/remote/providers")
     @ResponseBody
-    public Collection<String> listProviders() {
-        Set<String> providers = new HashSet<>();
+    public Collection<ProviderResponse> listProviders() {
+        Set<ProviderResponse> providers = new HashSet<>();
         for (Map.Entry<String, RemoteAuthentication> provider : remoteAuthenticationProviders.entrySet()) {
             if (provider.getValue() != null) {
-                providers.add(provider.getKey());
+                String id = provider.getKey();
+                ProviderResponse providerResponse = new ProviderResponse();
+                providerResponse.setId(id);
+                providerResponse.setLabel(new DefaultMessageSourceResolvable("authentication.providers.remote." + id));
+                providers.add(providerResponse);
             }
         }
         return providers;
@@ -98,12 +104,53 @@ public class AuthenticationController {
     }
 
     /**
+     * Response representing a providers details
+     */
+    public static class ProviderResponse {
+        private String id;
+
+        /** The label to give to the provider */
+        private MessageSourceResolvable label;
+
+        /**
+         * Get the ID of the provider
+         * @return the ID
+         */
+        public String getId() {
+            return id;
+        }
+
+        /**
+         * Set the ID of the provider
+         * @param id the ID
+         */
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        /**
+         * Get the label
+         * @return the label
+         */
+        public MessageSourceResolvable getLabel() {
+            return label;
+        }
+
+        /**
+         * Set the label
+         * @param label the label
+         */
+        public void setLabel(MessageSourceResolvable label) {
+            this.label = label;
+        }
+    }
+
+    /**
      * Response to indicate the client needs to redirect the user
      */
     public static class RedirectResponse {
         /** The URI to redirect to */
         private URI uri;
-
         /**
          * Get the URI to redirect to
          * @return the URI to redirect to
