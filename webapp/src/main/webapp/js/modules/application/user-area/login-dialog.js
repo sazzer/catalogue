@@ -6,11 +6,12 @@ define([
     "dojo/i18n",
     "dojo/dom-construct",
     "dojo/query",
+    "dojo/on",
     "dijit/Dialog",
     "books/core/request",
     "dojo/text!./templates/login-dialog.tmpl",
     "dojo/i18n!./nls/login-dialog"
-], function (declare, i18n, domConstruct, query, Dialog, Request, template) {
+], function (declare, i18n, domConstruct, query, on, Dialog, Request, template) {
     return declare([], {
         /**
          * Constructor that will actually build the dialog
@@ -33,18 +34,28 @@ define([
                 var dialogContent = domConstruct.toDom(template),
                     providerList = query(".socialButtons", dialogContent);
 
-                providers.forEach(function (provider) {
+                providers.forEach(dojo.hitch(this, function (provider) {
                     var providerNode = domConstruct.create("li", {
                         "class": provider.id,
                         "innerHTML": provider.label
                     });
                     domConstruct.place(providerNode, providerList[0], "last");
-                });
+                    on(providerNode, "click", dojo.hitch(this, this._onClickProvider, provider));
+                }));
 
                 this._dialog.set("content", dialogContent);
                 this._dialog.show();
             }));
             req.go();
+        },
+
+        /**
+         * Handler when a provider is selected
+         * @param provider the provider details
+         * @private
+         */
+        _onClickProvider: function(provider) {
+            console.log("Clicked on provider: " + provider.id);
         }
     });
 });
