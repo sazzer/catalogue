@@ -65,10 +65,11 @@ public class AuthenticationController {
     /**
      * Get the list of providers that are configured
      * @return the list of providers
+     * @throws URISyntaxException if the URI to the provider is invalid
      */
     @RequestMapping("/remote/providers")
     @ResponseBody
-    public Collection<ProviderResponse> listProviders() {
+    public Collection<ProviderResponse> listProviders() throws URISyntaxException {
         Set<ProviderResponse> providers = new HashSet<>();
         for (Map.Entry<String, RemoteAuthentication> provider : remoteAuthenticationProviders.entrySet()) {
             if (provider.getValue() != null) {
@@ -76,6 +77,7 @@ public class AuthenticationController {
                 ProviderResponse providerResponse = new ProviderResponse();
                 providerResponse.setId(id);
                 providerResponse.setLabel(new DefaultMessageSourceResolvable("authentication.providers.remote." + id));
+                providerResponse.setUri(new URI("http://localhost:8080/webapp/api/auth/remote/" + id));
                 providers.add(providerResponse);
             }
         }
@@ -107,10 +109,29 @@ public class AuthenticationController {
      * Response representing a providers details
      */
     public static class ProviderResponse {
+        /** The ID of the provider */
         private String id;
 
         /** The label to give to the provider */
         private MessageSourceResolvable label;
+
+        /** The URI to use for authentication */
+        private URI uri;
+        /**
+         * Get the URI to use for authentication
+         * @return the URI to use for authentication
+         */
+        public URI getUri() {
+            return uri;
+        }
+
+        /**
+         * Set the URI to use for authentication
+         * @param uri the URI to use for authentication
+         */
+        public void setUri(URI uri) {
+            this.uri = uri;
+        }
 
         /**
          * Get the ID of the provider
@@ -151,6 +172,8 @@ public class AuthenticationController {
     public static class RedirectResponse {
         /** The URI to redirect to */
         private URI uri;
+        /** The action to perform */
+        private String action = "redirect";
         /**
          * Get the URI to redirect to
          * @return the URI to redirect to
@@ -165,6 +188,14 @@ public class AuthenticationController {
          */
         public void setUri(URI uri) {
             this.uri = uri;
+        }
+
+        /**
+         * Get the action to perform
+         * @return the action
+         */
+        public String getAction() {
+            return action;
         }
     }
 
