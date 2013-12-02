@@ -15,11 +15,15 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The actual implementation of a UriBuilder that works in terms of an HTTP Request
  */
 public class UriBuilderImpl implements UriBuilder {
+    /** The logger to use */
+    private static final Logger LOG = LoggerFactory.getLogger(UriBuilderImpl.class);
 
     /** The request object to work with */
     private HttpServletRequest request;
@@ -54,6 +58,33 @@ public class UriBuilderImpl implements UriBuilder {
      */
     @Override
     public URI buildUri(String path, Map<String, Object> params) throws URISyntaxException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String originalURI = request.getRequestURI();
+        String uriBase = null;
+
+        String pathinfo = request.getPathInfo();
+        if (pathinfo.isEmpty()) {
+            LOG.debug("Path Info: {}", pathinfo);
+            int pathInfoStart = originalURI.indexOf(pathinfo);
+            uriBase = originalURI.substring(0, pathInfoStart);
+        } else {
+            String contextPath = request.getContextPath();
+            String servletPath = request.getServletPath();
+            String basePath = contextPath + servletPath;
+            LOG.debug("Base Path: {}", basePath);
+
+            if (!basePath.isEmpty()) {
+                int basePathStart = originalURI.indexOf(basePath);
+                int basePathEnd = basePathStart + basePath.length();
+                uriBase = originalURI.substring(0, basePathEnd);
+            }
+        }
+
+        if (uriBase == null) {
+            throw new URISyntaxException(originalURI,
+                "Original URI didn't have enough details to build the new one from");
+        }
+
+        String fullUri = uriBase + path;
+        return new URI(fullUri);
     }
 }
