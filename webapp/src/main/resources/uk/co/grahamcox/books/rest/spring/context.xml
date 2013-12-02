@@ -16,6 +16,14 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <bean id="uriBuilder" class="uk.co.grahamcox.books.webapp.uri.UriBuilderInterceptor" />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <ref bean="uriBuilder" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <import resource="controllers.xml" />
 
 </beans>
