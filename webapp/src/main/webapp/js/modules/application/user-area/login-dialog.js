@@ -55,7 +55,13 @@ define([
          * @private
          */
         _onClickProvider: function(provider) {
-            console.log("Clicked on provider: " + provider.id);
+            var req = new Request(provider.uri);
+            req.on("success", function(details) {
+                if (details.action == "redirect") {
+                    window.location = details.uri;
+                }
+            });
+            req.go();
         }
     });
 });
