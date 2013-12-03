@@ -34,9 +34,13 @@ import uk.co.grahamcox.books.webapp.uri.UriBuilder;
  * Controller to handle authentication
  */
 @Controller
-@RequestMapping("/auth")
 public class AuthenticationController {
-
+    /** the base of all paths for this controller */
+    private static final String CONTROLLER_PATH_BASE = "/auth";
+    /** Path mapping for provider details */
+    private static final String PROVIDERS_PATH = CONTROLLER_PATH_BASE + "/remote/providers";
+    /** Path mapping for provider details */
+    private static final String REMOTE_PROVIDER_PATH = PROVIDERS_PATH + "/{provider}";
     /** The map of remote authentication providers */
     @NotNull
     @Valid
@@ -81,7 +85,7 @@ public class AuthenticationController {
      * @return the list of providers
      * @throws URISyntaxException if the URI to the provider is invalid
      */
-    @RequestMapping("/remote/providers")
+    @RequestMapping(PROVIDERS_PATH)
     @ResponseBody
     public Collection<ProviderResponse> listProviders() throws URISyntaxException {
         Set<ProviderResponse> providers = new HashSet<>();
@@ -91,7 +95,7 @@ public class AuthenticationController {
                 ProviderResponse providerResponse = new ProviderResponse();
                 providerResponse.setId(id);
                 providerResponse.setLabel(new DefaultMessageSourceResolvable("authentication.providers.remote." + id));
-                providerResponse.setUri(uriBuilder.buildUri("/auth/remote/" + id));
+                providerResponse.setUri(uriBuilder.buildUri(REMOTE_PROVIDER_PATH.replace("{provider}", id)));
                 providers.add(providerResponse);
             }
         }
@@ -104,7 +108,7 @@ public class AuthenticationController {
      * @throws UnknownProviderException if the provider is unknown
      * @throws URISyntaxException if the URI to redirect to is invalid
      */
-    @RequestMapping("/remote/{provider}")
+    @RequestMapping(REMOTE_PROVIDER_PATH)
     @ResponseBody
     public RedirectResponse redirectToRemote(@PathVariable String provider)
         throws UnknownProviderException, URISyntaxException {
