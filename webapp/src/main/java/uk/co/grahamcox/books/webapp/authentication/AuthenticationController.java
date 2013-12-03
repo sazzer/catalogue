@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import uk.co.grahamcox.books.webapp.uri.UriBuilder;
 
 /**
  * Controller to handle authentication
@@ -41,12 +42,25 @@ public class AuthenticationController {
     @Valid
     private Map<String, RemoteAuthentication> remoteAuthenticationProviders = new HashMap<>();
 
+    /** The URI Builder to use */
+    @NotNull
+    @Valid
+    private UriBuilder uriBuilder;
+
     /**
      * Set the map of providers to use
      * @param remoteAuthenticationProviders the map of providers
      */
     public void setRemoteAuthenticationProviders(Map<String, RemoteAuthentication> remoteAuthenticationProviders) {
         this.remoteAuthenticationProviders = remoteAuthenticationProviders;
+    }
+
+    /**
+     * Set the URI Builder to use
+     * @param uriBuilder the URI Builder
+     */
+    public void setUriBuilder(UriBuilder uriBuilder) {
+        this.uriBuilder = uriBuilder;
     }
 
     /**
@@ -77,7 +91,7 @@ public class AuthenticationController {
                 ProviderResponse providerResponse = new ProviderResponse();
                 providerResponse.setId(id);
                 providerResponse.setLabel(new DefaultMessageSourceResolvable("authentication.providers.remote." + id));
-                providerResponse.setUri(new URI("http://localhost:8080/webapp/api/auth/remote/" + id));
+                providerResponse.setUri(uriBuilder.buildUri("/auth/remote/" + id));
                 providers.add(providerResponse);
             }
         }

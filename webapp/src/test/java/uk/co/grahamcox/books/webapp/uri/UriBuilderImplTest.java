@@ -34,7 +34,9 @@ public class UriBuilderImplTest {
     @Before
     public void setup() {
         mockHttpServletRequest = new MockHttpServletRequest("GET",
-            "http://localhost:8080/webapp/api/auth/remote/providers");
+            "/webapp/api/auth/remote/providers");
+        mockHttpServletRequest.setRemoteHost("localhost");
+        mockHttpServletRequest.setServerPort(8080);
         mockHttpServletRequest.setContextPath("/webapp");
         mockHttpServletRequest.setServletPath("/api");
         mockHttpServletRequest.setPathInfo("/auth/remote/providers");

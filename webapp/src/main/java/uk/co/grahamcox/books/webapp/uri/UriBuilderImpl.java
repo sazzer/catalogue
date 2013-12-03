@@ -58,7 +58,7 @@ public class UriBuilderImpl implements UriBuilder {
      */
     @Override
     public URI buildUri(String path, Map<String, Object> params) throws URISyntaxException {
-        String originalURI = request.getRequestURI();
+        String originalURI = request.getRequestURL().toString();
         String uriBase = null;
 
         String pathinfo = request.getPathInfo();
