@@ -63,7 +63,7 @@ public class OAuth2AuthenticationTest {
    */
   @Test
   public void testRedirect() throws URISyntaxException {
-    URI redirect = oAuth2Authentication.redirect();
+    URI redirect = oAuth2Authentication.redirect(null);
     System.out.print("Redirect URI: " + redirect);
 
     Assert.assertEquals("https", redirect.getScheme());

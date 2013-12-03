@@ -25,8 +25,9 @@ import java.net.URISyntaxException;
 public interface RemoteAuthentication {
   /**
    * Generate a URI to redirect the user to for authentication purposes
+   * @param returnTo The URI to return to after authentication has completed
    * @return the URI to redirect to
    * @throws URISyntaxException if the URI built is invalid
    */
-  public URI redirect() throws URISyntaxException;
+  public URI redirect(URI returnTo) throws URISyntaxException;
 }

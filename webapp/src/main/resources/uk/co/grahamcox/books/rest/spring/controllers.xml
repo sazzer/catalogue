@@ -12,8 +12,8 @@
             <map>
                 <entry key="google">
                     <bean class="uk.co.grahamcox.books.webapp.authentication.OAuth2Authentication">
-                        <property name="authUri" value="http://www.google.com" />
-                        <property name="clientId" value="clientId" />
+                        <property name="authUri" value="https://accounts.google.com/o/oauth2/auth" />
+                        <property name="clientId" value="${google.clientId}" />
                         <property name="scopes">
                             <set>
                                 <value>openid</value>

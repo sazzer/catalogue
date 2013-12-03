@@ -34,87 +34,85 @@ import org.apache.commons.lang3.StringUtils;
  * Remote Authentication mechanism that works against a remote OAuth 2.0 provider
  */
 public class OAuth2Authentication implements RemoteAuthentication {
-  /** The base authentication URI to use */
-  @NotNull
-  @Valid
-  @Size(min = 1)
-  private URI authUri;
-  /** The Client ID to use */
-  @NotNull
-  @Valid
-  @Size(min = 1)
-  private String clientId;
-  /** The Scopes to request */
-  @NotNull
-  @Valid
-  private Set<String> scopes = new HashSet<>();
-  /** The URI to request the user is redirected to on success */
-  @Valid
-  @Size(min = 1)
-  private URI redirectUri;
-  /**
-   * Set the authentication URI to use
-   * @param authUri the authentication URI
-   */
-  public void setAuthUri(URI authUri) {
-    this.authUri = authUri;
-  }
-
-  /**
-   * Set the Client ID to use
-   * @param clientId the Client ID
-   */
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
-  }
-
-  /**
-   * Set the scopes to request
-   * @param scopes the scopes to request
-   */
-  public void setScopes(Set<String> scopes) {
-    this.scopes = scopes;
-  }
-
-  /**
-   * Set the URI to redirect the user to on login
-   * @param redirectUri the URI to redirect the user to
-   */
-  public void setRedirectUri(URI redirectUri) {
-    this.redirectUri = redirectUri;
-  }
+    /**
+     * The base authentication URI to use
+     */
+    @NotNull
+    @Valid
+    @Size(min = 1)
+    private URI authUri;
+    /**
+     * The Client ID to use
+     */
+    @NotNull
+    @Valid
+    @Size(min = 1)
+    private String clientId;
+    /**
+     * The Scopes to request
+     */
+    @NotNull
+    @Valid
+    private Set<String> scopes = new HashSet<>();
 
     /**
-   * Generate a URI to redirect the user to for authentication purposes
-   *
-   * @return the URI to redirect to
-   * @throws URISyntaxException if the URI built is invalid
-   */
-  @Override
-  public URI redirect() throws URISyntaxException {
-    Map<String, String> params = new HashMap<>();
-    params.put("client_id", clientId);
-    params.put("response_type", "code");
-    params.put("state", UUID.randomUUID().toString());
-    if (redirectUri != null) {
-      params.put("redirect_uri", redirectUri.toString());
+     * Set the authentication URI to use
+     *
+     * @param authUri the authentication URI
+     */
+    public void setAuthUri(URI authUri) {
+        this.authUri = authUri;
     }
-    if (!scopes.isEmpty()) {
-      String scope = StringUtils.join(scopes, " ");
-      params.put("scope", scope);
+
+    /**
+     * Set the Client ID to use
+     *
+     * @param clientId the Client ID
+     */
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
-    StringBuilder uri = new StringBuilder();
-    uri.append(authUri).append("?");
-    for (Map.Entry<String, String> param : params.entrySet()) {
-      try {
-        String key = URLEncoder.encode(param.getKey(), "UTF-8");
-        String value = URLEncoder.encode(param.getValue(), "UTF-8");
-        uri.append(key).append("=").append(value).append("&");
-      }
-      catch (UnsupportedEncodingException e) {
-        throw new RuntimeException("UTF-8 encoding isn't supported!", e);
-      }
+
+    /**
+     * Set the scopes to request
+     *
+     * @param scopes the scopes to request
+     */
+    public void setScopes(Set<String> scopes) {
+        this.scopes = scopes;
     }
-    return new URI(uri.toString());
-  }
+
+    /**
+     * Generate a URI to redirect the user to for authentication purposes
+     *
+     * @param returnTo The URI to return to after authentication has completed   *
+     * @return the URI to redirect to
+     * @throws URISyntaxException if the URI built is invalid
+     */
+    @Override
+    public URI redirect(URI returnTo) throws URISyntaxException {
+        Map<String, String> params = new HashMap<>();
+        params.put("client_id", clientId);
+        params.put("response_type", "code");
+        params.put("state", UUID.randomUUID().toString());
+        if (returnTo != null) {
+            params.put("redirect_uri", returnTo.toString());
+        }
+        if (!scopes.isEmpty()) {
+            String scope = StringUtils.join(scopes, " ");
+            params.put("scope", scope);
+        }
+        StringBuilder uri = new StringBuilder();
+        uri.append(authUri).append("?");
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            try {
+                String key = URLEncoder.encode(param.getKey(), "UTF-8");
+                String value = URLEncoder.encode(param.getValue(), "UTF-8");
+                uri.append(key).append("=").append(value).append("&");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("UTF-8 encoding isn't supported!", e);
+            }
+        }
+        return new URI(uri.toString());
+    }
 }

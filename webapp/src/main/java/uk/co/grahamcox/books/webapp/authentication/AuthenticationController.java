@@ -41,6 +41,8 @@ public class AuthenticationController {
     private static final String PROVIDERS_PATH = CONTROLLER_PATH_BASE + "/remote/providers";
     /** Path mapping for provider details */
     private static final String REMOTE_PROVIDER_PATH = PROVIDERS_PATH + "/{provider}";
+    /** Path mapping for the URI to return to when coming back from Remote Authenticaiton */
+    private static final String RETURN_PROVIDER_PATH = CONTROLLER_PATH_BASE + "/remote/return/{provider}";
     /** The map of remote authentication providers */
     @NotNull
     @Valid
@@ -112,9 +114,11 @@ public class AuthenticationController {
     @ResponseBody
     public RedirectResponse redirectToRemote(@PathVariable String provider)
         throws UnknownProviderException, URISyntaxException {
+        URI returnToUri = uriBuilder.buildUri(RETURN_PROVIDER_PATH.replace("{provider}", provider));
+
         RemoteAuthentication remoteAuthentication = remoteAuthenticationProviders.get(provider);
         if (remoteAuthentication != null) {
-            URI uri = remoteAuthentication.redirect();
+            URI uri = remoteAuthentication.redirect(returnToUri);
             RedirectResponse response = new RedirectResponse();
             response.setUri(uri);
             return response;
