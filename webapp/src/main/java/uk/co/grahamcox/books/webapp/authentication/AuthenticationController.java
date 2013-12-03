@@ -13,10 +13,12 @@ package uk.co.grahamcox.books.webapp.authentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.context.MessageSourceResolvable;
@@ -122,6 +124,33 @@ public class AuthenticationController {
             RedirectResponse response = new RedirectResponse();
             response.setUri(uri);
             return response;
+        } else {
+            throw new UnknownProviderException(provider);
+        }
+    }
+
+    /**
+     * Handle the return from a provider after authentication has occurred
+     * @param provider the provider name
+     * @param request the request to get parameters from
+     * @throws UnknownProviderException if the provider is unknown
+     */
+    @RequestMapping(RETURN_PROVIDER_PATH)
+    public void handleResponseFromRemote(@PathVariable String provider, HttpServletRequest request)
+        throws UnknownProviderException{
+
+        RemoteAuthentication remoteAuthentication = remoteAuthenticationProviders.get(provider);
+        if (remoteAuthentication != null) {
+            Map<String, String> params = new HashMap<>();
+            Enumeration<String> parameterNames = request.getParameterNames();
+            while (parameterNames.hasMoreElements()) {
+                String param = parameterNames.nextElement();
+                String value = request.getParameter(param);
+                if (value != null) {
+                    params.put(param, value);
+                }
+            }
+            remoteAuthentication.handleResponse(params);
         } else {
             throw new UnknownProviderException(provider);
         }

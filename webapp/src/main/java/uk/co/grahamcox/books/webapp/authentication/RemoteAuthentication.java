@@ -18,16 +18,24 @@ package uk.co.grahamcox.books.webapp.authentication;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  * Mechanism to perform Authentication against a third party provider
  */
 public interface RemoteAuthentication {
-  /**
-   * Generate a URI to redirect the user to for authentication purposes
-   * @param returnTo The URI to return to after authentication has completed
-   * @return the URI to redirect to
-   * @throws URISyntaxException if the URI built is invalid
-   */
-  public URI redirect(URI returnTo) throws URISyntaxException;
+    /**
+     * Generate a URI to redirect the user to for authentication purposes
+     *
+     * @param returnTo The URI to return to after authentication has completed
+     * @return the URI to redirect to
+     * @throws URISyntaxException if the URI built is invalid
+     */
+    public URI redirect(URI returnTo) throws URISyntaxException;
+
+    /**
+     * Handle the response from a remote authentication
+     * @param responseParams the response parameters
+     */
+    public void handleResponse(Map<String, String> responseParams);
 }

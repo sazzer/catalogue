@@ -115,4 +115,14 @@ public class OAuth2Authentication implements RemoteAuthentication {
         }
         return new URI(uri.toString());
     }
+
+    /**
+     * Handle the response from a remote authentication
+     *
+     * @param responseParams the response parameters
+     */
+    @Override
+    public void handleResponse(Map<String, String> responseParams) {
+        throw new UnsupportedOperationException();
+    }
 }
