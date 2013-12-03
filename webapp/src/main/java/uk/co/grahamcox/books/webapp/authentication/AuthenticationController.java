@@ -51,7 +51,7 @@ public class AuthenticationController {
     /** The URI Builder to use */
     @NotNull
     @Valid
-    private UriBuilder uriBuilder;
+    private UriBuilder uriBuilder = null;
 
     /**
      * Set the map of providers to use
