@@ -134,10 +134,12 @@ public class AuthenticationController {
      * @param provider the provider name
      * @param request the request to get parameters from
      * @throws UnknownProviderException if the provider is unknown
+     * @throws URISyntaxException if the URI to redirect to is invalid
      */
     @RequestMapping(RETURN_PROVIDER_PATH)
     public void handleResponseFromRemote(@PathVariable String provider, HttpServletRequest request)
-        throws UnknownProviderException{
+        throws UnknownProviderException, URISyntaxException {
+        URI returnToUri = uriBuilder.buildUri(RETURN_PROVIDER_PATH.replace("{provider}", provider));
 
         RemoteAuthentication remoteAuthentication = remoteAuthenticationProviders.get(provider);
         if (remoteAuthentication != null) {
@@ -150,7 +152,7 @@ public class AuthenticationController {
                     params.put(param, value);
                 }
             }
-            remoteAuthentication.handleResponse(params);
+            remoteAuthentication.handleResponse(returnToUri, params);
         } else {
             throw new UnknownProviderException(provider);
         }

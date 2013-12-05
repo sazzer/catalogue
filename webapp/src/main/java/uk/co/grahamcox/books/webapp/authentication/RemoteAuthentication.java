@@ -35,7 +35,8 @@ public interface RemoteAuthentication {
 
     /**
      * Handle the response from a remote authentication
+     * @return the URI that was redirected to
      * @param responseParams the response parameters
      */
-    public void handleResponse(Map<String, String> responseParams);
+    public void handleResponse(URI redirectUri, Map<String, String> responseParams);
 }

@@ -16,6 +16,7 @@
  */
 package uk.co.grahamcox.books.webapp.authentication;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,11 +30,25 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 /**
  * Remote Authentication mechanism that works against a remote OAuth 2.0 provider
  */
 public class OAuth2Authentication implements RemoteAuthentication {
+    public static final String CHARSET = "UTF-8";
+    /** The HTTP Client to use */
+    @NotNull
+    @Valid
+    private CloseableHttpClient httpClient = HttpClients.createDefault();
     /**
      * The base authentication URI to use
      */
@@ -42,6 +57,13 @@ public class OAuth2Authentication implements RemoteAuthentication {
     @Size(min = 1)
     private URI authUri;
     /**
+     * The base token URI to use
+     */
+    @NotNull
+    @Valid
+    @Size(min = 1)
+    private URI tokenUri;
+    /**
      * The Client ID to use
      */
     @NotNull
@@ -49,11 +71,34 @@ public class OAuth2Authentication implements RemoteAuthentication {
     @Size(min = 1)
     private String clientId;
     /**
+     * The Client Secret to use
+     */
+    @NotNull
+    @Valid
+    @Size(min = 1)
+    private String clientSecret;
+    /**
      * The Scopes to request
      */
     @NotNull
     @Valid
     private Set<String> scopes = new HashSet<>();
+
+    /**
+     * Set the HTTP Client to use
+     * @param httpClient the HTTP Client to use
+     */
+    public void setHttpClient(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    /**
+     * Set the token URI to use
+     * @param tokenUri the token URI
+     */
+    public void setTokenUri(URI tokenUri) {
+        this.tokenUri = tokenUri;
+    }
 
     /**
      * Set the authentication URI to use
@@ -71,6 +116,14 @@ public class OAuth2Authentication implements RemoteAuthentication {
      */
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    /**
+     * Set the Client Secret to use
+     * @param clientSecret the client secret
+     */
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
     /**
@@ -104,6 +157,11 @@ public class OAuth2Authentication implements RemoteAuthentication {
         }
         StringBuilder uri = new StringBuilder();
         uri.append(authUri).append("?");
+        buildQueryString(params, uri);
+        return new URI(uri.toString());
+    }
+
+    private void buildQueryString(Map<String, String> params, StringBuilder uri) {
         for (Map.Entry<String, String> param : params.entrySet()) {
             try {
                 String key = URLEncoder.encode(param.getKey(), "UTF-8");
@@ -113,16 +171,48 @@ public class OAuth2Authentication implements RemoteAuthentication {
                 throw new RuntimeException("UTF-8 encoding isn't supported!", e);
             }
         }
-        return new URI(uri.toString());
     }
 
     /**
      * Handle the response from a remote authentication
      *
+     * @return the URI that was redirected to
      * @param responseParams the response parameters
      */
     @Override
-    public void handleResponse(Map<String, String> responseParams) {
-        throw new UnsupportedOperationException();
+    public void handleResponse(URI redirectUri, Map<String, String> responseParams) {
+        String code = responseParams.get("code");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("code", code);
+        params.put("client_id", clientId);
+        params.put("client_secret", clientSecret);
+        params.put("redirect_uri", redirectUri.toString());
+        params.put("grant_type", "authorization_code");
+
+        StringBuilder body = new StringBuilder();
+        buildQueryString(params, body);
+
+        HttpPost httpPost = new HttpPost(tokenUri);
+        try {
+            httpPost.setEntity(new StringEntity(body.toString(),
+                "application/x-www-form-urlencoded",
+                CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 encoding isn't supported!", e);
+        }
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            try {
+                HttpEntity entity = response.getEntity();
+                System.out.println(EntityUtils.toString(entity));
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
